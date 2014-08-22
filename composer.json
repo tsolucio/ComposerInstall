@@ -1,0 +1,9 @@
+{
+  "name": "tsolucio/ComposerInstall",
+  "type": "library",
+  "autoload": {
+        "psr-4": {
+            "tsolucio\\ComposerInstall\\": ""
+        }
+    }
+}

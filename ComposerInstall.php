@@ -82,6 +82,14 @@ class ComposerInstall
 	}
 	
 	public static function installModule($moduledir,$io) {
+		$manifest = ComposerInstall::getModuleInfo($moduledir);
+		$module = (string)$manifest->name;
+		$type = (string)$manifest->type;
+		@copy('build/HelperScripts/composerinstallmodule.php', '.');
+		@system("php composerinstallmodule.php $module $type");
+		@unlink('composerinstallmodule.php');
+		
+		/*
 		@error_reporting(0);
 		@ini_set('display_errors', 'off');
 		@set_time_limit(0);
@@ -108,5 +116,6 @@ class ComposerInstall
 			$rdo = $package->importManifest('modules/'.$module.'/manifest.xml');
 			$io->write('Module installed: '.$label);
 		}
+		*/
 	}
 }

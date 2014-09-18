@@ -86,11 +86,11 @@ class ComposerInstall
 	
 	public static function installModule($module,$type,$io) {
 		$io->write('Copy ');
-		@copy('build/HelperScripts/composerinstallmodule.php', '.');
+		@copy('build/HelperScripts/composerinstallmodule.php', 'composerinstallmodule.php');
 		$io->write('system ');
 		@system("php composerinstallmodule.php $module $type");
 		$io->write('del ');
-		@unlink('composerinstallmodule.php');
+		//@unlink('composerinstallmodule.php');
 		
 		/*
 		@error_reporting(0);

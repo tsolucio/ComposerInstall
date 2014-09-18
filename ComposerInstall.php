@@ -82,14 +82,15 @@ class ComposerInstall
 	}
 	
 	public static function installModule($moduledir,$io) {
-		require_once('vtlib/Vtiger/Module.php');
-		require_once('vtlib/Vtiger/Package.php');
-		$io->write('start: '.$label);
-		global $current_user,$adb, $Vtiger_Utils_Log;
 		@error_reporting(0);
 		@ini_set('display_errors', 'off');
 		@set_time_limit(0);
 		@ini_set('memory_limit','1024M');
+		$io->write('start-1: '.$label);
+		require_once('vtlib/Vtiger/Module.php');
+		require_once('vtlib/Vtiger/Package.php');
+		$io->write('start0: '.$label);
+		global $current_user,$adb, $Vtiger_Utils_Log;
 		$current_user = new Users();
 		$io->write('start1: '.$label);
 		$current_user->retrieveCurrentUserInfoFromFile(1); // admin

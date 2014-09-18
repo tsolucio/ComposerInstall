@@ -85,9 +85,8 @@ class ComposerInstall
 	}
 	
 	public static function installModule($module,$type,$io) {
-		$io->write('Copy ');
 		@copy('build/HelperScripts/composerinstallmodule.php', 'composerinstallmodule.php');
-		$io->write('system ');
+		$io->write("php composerinstallmodule.php $module $type");
 		@system("php composerinstallmodule.php $module $type");
 		$io->write('del ');
 		//@unlink('composerinstallmodule.php');

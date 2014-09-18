@@ -86,17 +86,17 @@ class ComposerInstall
 		@ini_set('display_errors', 'off');
 		@set_time_limit(0);
 		@ini_set('memory_limit','1024M');
-		$io->write('start-1: '.$label);
+		$io->write('start-1: ');
 		require_once('vtlib/Vtiger/Module.php');
 		require_once('vtlib/Vtiger/Package.php');
-		$io->write('start0: '.$label);
+		$io->write('start0: ');
 		global $current_user,$adb, $Vtiger_Utils_Log;
 		$current_user = new Users();
-		$io->write('start1: '.$label);
+		$io->write('start1: ');
 		$current_user->retrieveCurrentUserInfoFromFile(1); // admin
-		$io->write('start2: '.$label);
+		$io->write('start2: ');
 		$package = new Vtiger_Package();
-		$io->write('start3: '.$label);
+		$io->write('start3: ');
 		$manifest = ComposerInstall::getModuleInfo($moduledir);
 		$module = (string)$manifest->name;
 		$label = (string)$manifest->label;

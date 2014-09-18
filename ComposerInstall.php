@@ -30,8 +30,13 @@ class ComposerInstall
 			$dir = ComposerInstall::getRealDirName($target);
 			if (file_exists($dir.'/manifest.xml')) {
 				$manifest = ComposerInstall::getModuleInfo($dir);
-				$module = (string)$manifest->name;
 				$type = (string)$manifest->type;
+				if (empty($type)) $type='module';
+				if ($type=='language') {
+					$module = (string)$manifest->prefix;
+				} else {
+					$module = (string)$manifest->name;
+				}
 				ComposerInstall::moveModuleFiles($dir,$io);
 				ComposerInstall::installModule($module,$type,$io);
 			}
@@ -57,6 +62,7 @@ class ComposerInstall
 	public static function moveModuleFiles($moduledir,$io) {
 		$manifest = ComposerInstall::getModuleInfo($moduledir);
 		$type = (string)$manifest->type;
+		if (empty($type)) $type='module';
 		$name = (string)$manifest->name;
 		$label = (string)$manifest->label;
 		$io->write('Copy into place: '.$label);

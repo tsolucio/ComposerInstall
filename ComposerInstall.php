@@ -29,8 +29,11 @@ class ComposerInstall
 			$target = $info->getTarget();
 			$dir = ComposerInstall::getRealDirName($target);
 			if (file_exists($dir.'/manifest.xml')) {
+				$manifest = ComposerInstall::getModuleInfo($moduledir);
+				$module = (string)$manifest->name;
+				$type = (string)$manifest->type;
 				ComposerInstall::moveModuleFiles($dir,$io);
-				ComposerInstall::installModule($dir,$io);
+				ComposerInstall::installModule($module,$type);
 			}
 		}
 	}
@@ -81,10 +84,7 @@ class ComposerInstall
 		return $manifest;
 	}
 	
-	public static function installModule($moduledir,$io) {
-		$manifest = ComposerInstall::getModuleInfo($moduledir);
-		$module = (string)$manifest->name;
-		$type = (string)$manifest->type;
+	public static function installModule($module,$type) {
 		@copy('build/HelperScripts/composerinstallmodule.php', '.');
 		@system("php composerinstallmodule.php $module $type");
 		@unlink('composerinstallmodule.php');

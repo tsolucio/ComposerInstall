@@ -33,7 +33,7 @@ class ComposerInstall
 				$module = (string)$manifest->name;
 				$type = (string)$manifest->type;
 				ComposerInstall::moveModuleFiles($dir,$io);
-				ComposerInstall::installModule($module,$type);
+				ComposerInstall::installModule($module,$type,$io);
 			}
 		}
 	}

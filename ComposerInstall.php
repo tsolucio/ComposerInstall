@@ -29,7 +29,7 @@ class ComposerInstall
 			$target = $info->getTarget();
 			$dir = ComposerInstall::getRealDirName($target);
 			if (file_exists($dir.'/manifest.xml')) {
-				$manifest = ComposerInstall::getModuleInfo($moduledir);
+				$manifest = ComposerInstall::getModuleInfo($dir);
 				$module = (string)$manifest->name;
 				$type = (string)$manifest->type;
 				ComposerInstall::moveModuleFiles($dir,$io);

@@ -92,38 +92,8 @@ class ComposerInstall
 	
 	public static function installModule($module,$type,$io) {
 		@copy('build/HelperScripts/composerinstallmodule.php', 'composerinstallmodule.php');
-		$io->write("php composerinstallmodule.php $module $type");
+		// we have to do this externally because composer is very strict with PHP errors and coreBOS has too many...
 		@system("php composerinstallmodule.php $module $type");
-		$io->write('del ');
-		//@unlink('composerinstallmodule.php');
-		
-		/*
-		@error_reporting(0);
-		@ini_set('display_errors', 'off');
-		@set_time_limit(0);
-		@ini_set('memory_limit','1024M');
-		$io->write('start-1: ');
-		require_once('vtlib/Vtiger/Module.php');
-		require_once('vtlib/Vtiger/Package.php');
-		$io->write('start0: ');
-		global $current_user,$adb, $Vtiger_Utils_Log;
-		$current_user = new Users();
-		$io->write('start1: ');
-		$current_user->retrieveCurrentUserInfoFromFile(1); // admin
-		$io->write('start2: ');
-		$package = new Vtiger_Package();
-		$io->write('start3: ');
-		$manifest = ComposerInstall::getModuleInfo($moduledir);
-		$module = (string)$manifest->name;
-		$label = (string)$manifest->label;
-		$tabrs = $adb->pquery('select count(*) from vtiger_tab where name=?',array($module));
-		if ($tabrs and $adb->query_result($tabrs, 0,0)==1) {
-			vtlib_toggleModuleAccess($module,true);
-			$io->write('Module activated: '.$label);
-		} else {
-			$rdo = $package->importManifest('modules/'.$module.'/manifest.xml');
-			$io->write('Module installed: '.$label);
-		}
-		*/
+		@unlink('composerinstallmodule.php');
 	}
 }

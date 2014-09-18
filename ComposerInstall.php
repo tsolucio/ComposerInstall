@@ -17,6 +17,8 @@
 namespace tsolucio\ComposerInstall;
 use ComposerScriptEvent;
 
+$Vtiger_Utils_Log = false;
+
 class ComposerInstall
 {
 	public static function postPackageInstall($event) {
@@ -28,6 +30,7 @@ class ComposerInstall
 			$dir = ComposerInstall::getRealDirName($target);
 			if (file_exists($dir.'/manifest.xml')) {
 				ComposerInstall::moveModuleFiles($dir,$io);
+				ComposerInstall::installModule($dir,$io);
 			}
 		}
 	}
@@ -78,4 +81,25 @@ class ComposerInstall
 		return $manifest;
 	}
 	
+	public static function installModule($moduledir,$io) {
+		require_once('vtlib/Vtiger/Module.php');
+		require_once('vtlib/Vtiger/Package.php');
+		global $current_user,$adb, $Vtiger_Utils_Log;
+		@set_time_limit(0);
+		@ini_set('memory_limit','1024M');
+		$current_user = new Users();
+		$current_user->retrieveCurrentUserInfoFromFile(1); // admin
+		$package = new Vtiger_Package();
+		$manifest = ComposerInstall::getModuleInfo($moduledir);
+		$module = (string)$manifest->name;
+		$label = (string)$manifest->label;
+		$tabrs = $adb->pquery('select count(*) from vtiger_tab where name=?',array($module));
+		if ($tabrs and $adb->query_result($tabrs, 0,0)==1) {
+			vtlib_toggleModuleAccess($module,true);
+			$io->write('Module activated: '.$label);
+		} else {
+			$rdo = $package->importManifest('modules/'.$module.'/manifest.xml');
+			$io->write('Module installed: '.$label);
+		}
+	}
 }

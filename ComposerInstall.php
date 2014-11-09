@@ -75,9 +75,9 @@ class ComposerInstall
 				@rename($langfile,$fname);
 			}
 		} else {  // module or extension
-			$this->dirmv($moduledir.'/modules/'.$name,'modules/'.$name,true,NULL,$io);
-			$this->dirmv($moduledir.'/templates','Smarty/templates/modules/'.$name,true,NULL,$io);
-			$this->dirmv($moduledir.'/cron','cron/modules/'.$name,true,NULL,$io);
+			ComposerInstall::dirmv($moduledir.'/modules/'.$name,'modules/'.$name,true,NULL,$io);
+			ComposerInstall::dirmv($moduledir.'/templates','Smarty/templates/modules/'.$name,true,NULL,$io);
+			ComposerInstall::dirmv($moduledir.'/cron','cron/modules/'.$name,true,NULL,$io);
 			@unlink($moduledir.'/pack.sh');
 			@unlink($moduledir.'/manifest.xml');
 			@unlink($moduledir.'/composer.json');
@@ -91,7 +91,7 @@ class ComposerInstall
 	// param bool 'overwrite existing files'
 	// param str 'location within the directory (for recurse)'
 	// returns void
-	function dirmv($source, $dest, $overwrite = false, $funcloc = NULL, $io = NULL) {
+	public static function dirmv($source, $dest, $overwrite = false, $funcloc = NULL, $io = NULL) {
 		if (is_null($funcloc)) {
 			$dest .= '/' . strrev(substr(strrev($source), 0, strpos(strrev($source), '/')));
 			$funcloc = '/';
@@ -116,7 +116,7 @@ class ComposerInstall
 							}
 						}
 					} elseif(is_dir($path)) {
-						$this->dirmv($source, $dest, $overwrite, $funcloc . $file . '/', $io); //recurse!
+						ComposerInstall::dirmv($source, $dest, $overwrite, $funcloc . $file . '/', $io); //recurse!
 						rmdir($path);
 					}
 				}

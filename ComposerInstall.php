@@ -94,9 +94,10 @@ class ComposerInstall
 	// param str 'location within the directory (for recurse)'
 	// returns void
 	public static function dirmv($source, $dest, $overwrite = false, $funcloc = NULL, $io = NULL) {
-		$io->write('dirmv '.$source. ":". $dest .  ":". $funcloc);
+		$debug = false;
+		if ($debug) $io->write('dirmv '.$source. ":". $dest .  ":". $funcloc);
 		if (!is_dir($dest . $funcloc)) {
-			$io->write('mkdir '.$dest . $funcloc);
+			if ($debug) $io->write('mkdir '.$dest . $funcloc);
 			mkdir($dest . $funcloc); // make subdirectory before subdirectory is copied
 		}
 		if (is_null($funcloc)) $funcloc = '/';
@@ -111,7 +112,7 @@ class ComposerInstall
 								$io->write('<font color="red">File ('.$path.') could not be moved, likely a permissions problem.</font>');
 							}
 						} elseif($overwrite) {
-							$io->write('unlink '.$path2. ":rename ". $path );
+							if ($debug) $io->write('unlink '.$path2. ":rename ". $path );
 							if (!@unlink($path2)) {
 								$io->write('Unable to overwrite file ("'.$path2.'"), likely to be a permissions problem.');
 							} elseif (!@rename($path, $path2)) {

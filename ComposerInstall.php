@@ -75,10 +75,9 @@ class ComposerInstall
 				@rename($langfile,$fname);
 			}
 		} else {  // module or extension
-			$io->write("$moduledir.'/modules/'.$name,'modules/'.$name");
-			rename($moduledir.'/modules/'.$name,'modules/'.$name);
-			@rename($moduledir.'/templates','Smarty/templates/modules/'.$name);
-			@rename($moduledir.'/cron','cron/modules/'.$name);
+			$this->dirmv($moduledir.'/modules/'.$name,'modules/'.$name,true,NULL,$io);
+			$this->dirmv($moduledir.'/templates','Smarty/templates/modules/'.$name,true,NULL,$io);
+			$this->dirmv($moduledir.'/cron','cron/modules/'.$name,true,NULL,$io);
 			@unlink($moduledir.'/pack.sh');
 			@unlink($moduledir.'/manifest.xml');
 			@unlink($moduledir.'/composer.json');
@@ -86,6 +85,46 @@ class ComposerInstall
 		}
 	}
 	
+	// move a directory and all subdirectories and files (recursive)
+	// param str 'source directory'
+	// param str 'destination directory'
+	// param bool 'overwrite existing files'
+	// param str 'location within the directory (for recurse)'
+	// returns void
+	function dirmv($source, $dest, $overwrite = false, $funcloc = NULL, $io = NULL) {
+		if (is_null($funcloc)) {
+			$dest .= '/' . strrev(substr(strrev($source), 0, strpos(strrev($source), '/')));
+			$funcloc = '/';
+		}
+		if (!is_dir($dest . $funcloc))
+			mkdir($dest . $funcloc); // make subdirectory before subdirectory is copied
+		if ($handle = opendir($source . $funcloc)) { // if the folder exploration is sucsessful, continue
+			while (false !== ($file = readdir($handle))) { // as long as storing the next file to $file is successful, continue
+				if ($file != '.' && $file != '..'  && $file != '.git') {
+					$path  = $source . $funcloc . $file;
+					$path2 = $dest . $funcloc . $file;
+					if (is_file($path)) {
+						if(!is_file($path2)) {
+							if(!@rename($path, $path2)) {
+								$io->write('<font color="red">File ('.$path.') could not be moved, likely a permissions problem.</font>');
+							}
+						} elseif($overwrite) {
+							if (!@unlink($path2)) {
+								$io->write('Unable to overwrite file ("'.$path2.'"), likely to be a permissions problem.');
+							} elseif (!@rename($path, $path2)) {
+								$io->write('<font color="red">File ('.$path.') could not be moved while overwritting, likely a permissions problem.</font>');
+							}
+						}
+					} elseif(is_dir($path)) {
+						$this->dirmv($source, $dest, $overwrite, $funcloc . $file . '/', $io); //recurse!
+						rmdir($path);
+					}
+				}
+			}
+			closedir($handle);
+		}
+	} // end of dirmv()
+
 	public static function getModuleInfo($moduledir) {
 		$manifest = simplexml_load_file($moduledir.'/manifest.xml');
 		return $manifest;

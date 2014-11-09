@@ -75,7 +75,8 @@ class ComposerInstall
 				@rename($langfile,$fname);
 			}
 		} else {  // module or extension
-			@rename($moduledir.'/modules/'.$name,'modules/'.$name);
+			$io->write("$moduledir.'/modules/'.$name,'modules/'.$name");
+			rename($moduledir.'/modules/'.$name,'modules/'.$name);
 			@rename($moduledir.'/templates','Smarty/templates/modules/'.$name);
 			@rename($moduledir.'/cron','cron/modules/'.$name);
 			@unlink($moduledir.'/pack.sh');

@@ -75,9 +75,11 @@ class ComposerInstall
 				@rename($langfile,$fname);
 			}
 		} else {  // module or extension
-			ComposerInstall::dirmv($moduledir.'/modules/'.$name,'modules/'.$name,true,NULL,$io);
-			ComposerInstall::dirmv($moduledir.'/templates','Smarty/templates/modules/'.$name,true,NULL,$io);
-			ComposerInstall::dirmv($moduledir.'/cron','cron/modules/'.$name,true,NULL,$io);
+			ComposerInstall::dirmv($moduledir.'/modules'.$name,'modules'.$name,true,NULL,$io);
+			if (file_exists($moduledir.'/templates'))
+				ComposerInstall::dirmv($moduledir.'/templates','Smarty/templates/modules/'.$name,true,NULL,$io);
+			if (file_exists($moduledir.'/cron'))
+				ComposerInstall::dirmv($moduledir.'/cron','cron/modules/'.$name,true,NULL,$io);
 			@unlink($moduledir.'/pack.sh');
 			@unlink($moduledir.'/manifest.xml');
 			@unlink($moduledir.'/composer.json');
@@ -92,10 +94,6 @@ class ComposerInstall
 	// param str 'location within the directory (for recurse)'
 	// returns void
 	public static function dirmv($source, $dest, $overwrite = false, $funcloc = NULL, $io = NULL) {
-		if (is_null($funcloc)) {
-			$dest .= '/' . strrev(substr(strrev($source), 0, strpos(strrev($source), '/')));
-			$funcloc = '/';
-		}
 		if (!is_dir($dest . $funcloc)) {
 			$io->write('mkdir '.$dest . $funcloc);
 			mkdir($dest . $funcloc); // make subdirectory before subdirectory is copied

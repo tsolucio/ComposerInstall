@@ -75,7 +75,7 @@ class ComposerInstall
 				@rename($langfile,$fname);
 			}
 		} else {  // module or extension
-			ComposerInstall::dirmv($moduledir.'/modules'.$name,'modules'.$name,true,NULL,$io);
+			ComposerInstall::dirmv($moduledir.'/modules/'.$name,'modules/'.$name,true,NULL,$io);
 			if (file_exists($moduledir.'/templates'))
 				ComposerInstall::dirmv($moduledir.'/templates','Smarty/templates/modules/'.$name,true,NULL,$io);
 			if (file_exists($moduledir.'/cron'))

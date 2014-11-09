@@ -99,6 +99,7 @@ class ComposerInstall
 			$io->write('mkdir '.$dest . $funcloc);
 			mkdir($dest . $funcloc); // make subdirectory before subdirectory is copied
 		}
+		if (is_null($funcloc)) $funcloc = '/';
 		if ($handle = opendir($source . $funcloc)) { // if the folder exploration is sucsessful, continue
 			while (false !== ($file = readdir($handle))) { // as long as storing the next file to $file is successful, continue
 				if ($file != '.' && $file != '..'  && $file != '.git') {

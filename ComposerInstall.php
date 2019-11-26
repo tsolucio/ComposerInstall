@@ -49,9 +49,13 @@ class ComposerInstall
 	
 	public static function getRealDirName($target) {
 		list($vendor,$package) = explode('/', $target);
+		if ($vendor=='corebos') {
+			$vendor='coreBOS';
+		}
 		$localdir = 'vendor/' . $vendor;
 		$dirs = array_filter(glob($localdir.'/*'), 'is_dir');
 		$found = false;
+		$dir = '';
 		foreach ($dirs as $dir) {
 			$found = (strtolower($dir) == 'vendor/'.$target);
 			if ($found) break;
